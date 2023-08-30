@@ -1,31 +1,23 @@
-currentBuild.displayName = "Maven-App-"+currentBuild.number
+currentBuild.displayName = "CAST-"+currentBuild.number
 pipeline {
-    agent any
-    tools {
-	    maven 'maven-jenkins'
+    agent {
+        label 'linux-agent'
     }
     stages {
-        stage('MAVEN BUILD'){
+        stage('Application Scan'){
             steps {
-                sh 'mvn clean package'
-		sh 'mv target/*.war target/tomcat-app.war'
+                sh '''
+                
+                java -jar /home/ec2-user/Highlight-Automation-Command/HighlightAutomation.jar \
+                --workingDir "."\
+                --sourceDir "$WORKSPACE/src"\
+                --skipUpload
+                
+                '''
             }
         }
-	stage('DEPLOY'){
-            steps {
-                sshagent(['jenkins-agent-creds']) {
-                    sh '''
-                
-                    scp -o StrictHostKeyChecking=no target/tomcat-app.war ec2-user@172.31.27.181:/opt/tomcat9/webapps
-                    ssh ec2-user@172.31.27.181 /opt/tomcat9/bin/shutdown.sh
-                    ssh ec2-user@172.31.27.181 /opt/tomcat9/bin/startup.sh
-                
-                    '''
-            }
-        }  
     }
-    }
-    	post {
+    post {
             success { 
             	echo "This pipeline is successfull!"
             }
