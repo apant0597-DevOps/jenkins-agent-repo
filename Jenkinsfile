@@ -10,7 +10,7 @@ pipeline {
                 
                 java -jar /home/ec2-user/Highlight-Automation-Command/HighlightAutomation.jar \
 		--analyzerDir "/home/ec2-user/Highlight-Automation-Command/perl" \
-  		----perlInstallDir "/home/ec2-user/Highlight-Automation-Command/perl" \
+  		--perlInstallDir "/home/ec2-user/Highlight-Automation-Command/perl" \
                 --workingDir "."\
                 --sourceDir "$WORKSPACE/src"\
                 --skipUpload
